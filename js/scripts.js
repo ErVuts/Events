@@ -42,9 +42,9 @@ $(document).ready(function(){
 	$('#seconds').text(seconds.toString().length == 1 ? '0' + seconds : seconds);
 		}
 
-	console.log(days + ':' + hours + ':' + minutes + ':' + seconds)
+	// console.log(days + ':' + hours + ':' + minutes + ':' + seconds)
 
-	}, 1000)
+	}, 1000);
 	
 		
 
@@ -61,5 +61,116 @@ $(document).ready(function(){
 	// End
 
 	// 7. Prodelat deystvie 2-6 kazduy secundu
+
+	let options = [
+		{
+			endpoint:'https://reqres.in/api/users',
+			count   : 6,
+			target  : 'competitorsUsers',
+			class   : null
+		},
+		{
+			endpoint:'https://reqres.in/api/users?page=2',
+			count   : 3,
+			target  : 'userJury',
+			class   : 'user__img-box--round',
+		}
+	];
+
+	options.forEach(function(option){
+		loadUsers(option)
+	})
+
+
+function loadUsers(opt){
+	let xhr = new XMLHttpRequest(); 
+
+	xhr.open('GET', opt.endpoint);
+	xhr.responseType = 'json';
+	xhr.send();
+
+	xhr.onload = function() {
+	  if (xhr.status != 200) { // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+	    alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+	  } else { // если всё прошло гладко, выводим результат
+	  	console.log(xhr.response);
+
+		let target = document.getElementById(opt.target),
+			users  = xhr.response.data.splice(0, opt.count);
+
+	  	users.forEach(function(user){
+	  		// console.log(user.last_name, user.first_name, user.avatar)
+
+	  		let html = `
+	  					<div class="user">
+						<div class="user__img-box" ${opt.class}>
+							<img src="${user.avatar}" alt="" class="user__img">
+						</div>
+						<div class="user__name">
+							${user.first_name} ${user.last_name} 
+						</div>
+					
+						<div class="user__pos">
+							${user.email}
+						</div>
+					</div>`;
+
+			target.innerHTML = target.innerHTML + html;
+	  	})}
+	  	console.log(xhr)
+
+		xhr.onerror = function() {
+	  alert("Запрос не удался");
+};
+};
+
+
+
+};
+
+// (function loadJury(){
+// 	let xhr = new XMLHttpRequest(); 
+
+// 	xhr.open('GET', 'https://reqres.in/api/users?page=2');
+// 	xhr.responseType = 'json';
+// 	xhr.send();
+
+// 	xhr.onload = function() {
+// 	  if (xhr.status != 200) { // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+// 	    alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+// 	  } else { // если всё прошло гладко, выводим результат
+// 	  	console.log(xhr.response);
+
+// 		let target = document.getElementById('userJury');
+// 		let users = xhr.response.data.splice(0, 3);
+
+// 	  	users.forEach(function(user, index){
+// 	  		// console.log(user.last_name, user.first_name, user.avatar)
+// 	  		if (index < 3){
+// 	  			  		let html = `
+// 	  			  					<div class="user">
+// 	  								<div class="user__img-box user__img-box--round">
+// 	  									<img src="${user.avatar}" alt="" class="user__img">
+// 	  								</div>
+// 	  								<div class="user__name">
+// 	  									${user.first_name} ${user.last_name} 
+// 	  								</div>
+// 	  								<div class="user__pos">
+// 	  									Creative Director
+// 	  								</div>
+// 	  							</div>`;
+	  		
+// 	  					target.innerHTML = target.innerHTML + html;
+// 	  		}
+// 	  	})}
+// };
+
+// console.log(xhr)
+
+// xhr.onerror = function() {
+//   alert("Запрос не удался");
+// };
+
+// })();
 
 });
