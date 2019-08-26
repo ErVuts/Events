@@ -124,8 +124,6 @@ function loadUsers(opt){
 };
 };
 
-
-
 };
 
 // (function loadJury(){
@@ -172,5 +170,13 @@ function loadUsers(opt){
 // };
 
 // })();
+	
+	let sound = document.querySelector('audio');
 
+	$('.toggler').on('click', function(e){
+		e.preventDefault();
+
+		$('body').toggleClass('menu-opened');
+		sound.play
+	})
 });
